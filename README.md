@@ -25,3 +25,6 @@
 
 	sz.Release(); //optional
 	//rsz.Release();
+# the output
+	134
+	1|2|3|this is a test str.
