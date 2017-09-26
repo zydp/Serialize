@@ -1,30 +1,29 @@
 #ifndef _SERIALIZE_H_
 #define _SERIALIZE_H_
 #include <string>
-#include "CommToolsExportDef.h"
 using std::string;
 
 #define SERIALIZE_BUF_SIZE 4096				//getpagesize()
-#define SERIALIZE_REALLOC_MAX_COUNT	8		//×î´ó¿Õ¼äÀ©Õ¹´ÎÊı4096*8
+#define SERIALIZE_REALLOC_MAX_COUNT	8		//æœ€å¤§ç©ºé—´æ‰©å±•æ¬¡æ•°4096*8
 typedef enum {
-	LENGTH_CHECK_READ,//·´ĞòÁĞ»¯
-	LENGTH_CHECK_WRITE,//ĞòÁĞ»¯
+	LENGTH_CHECK_READ,//ååºåˆ—åŒ–
+	LENGTH_CHECK_WRITE,//åºåˆ—åŒ–
 }LENGTH_CHECK_TYPE;
 
 /*
-* Warning£º Ò»¸öĞòÁĞ»¯¶ÔÏó£¬Ö»ÄÜÓÃÓÚĞòÁĞ»¯»ò·´ĞòÁĞ»¯ÖĞµÄÒ»ÖÖÓÃÍ¾
+* Warningï¼š ä¸€ä¸ªåºåˆ—åŒ–å¯¹è±¡ï¼Œåªèƒ½ç”¨äºåºåˆ—åŒ–æˆ–ååºåˆ—åŒ–ä¸­çš„ä¸€ç§ç”¨é€”
 */
 typedef struct szBuf  
 {
 	int iSize;
 	char pBuf[SERIALIZE_BUF_SIZE];
 }T_SZBUF;
-class COMM_TOOLS_API CSerialize
+class CSerialize
 {
 public:
-	/*ĞòÁĞ»¯Ê±Ê¹ÓÃ*/
+	/*åºåˆ—åŒ–æ—¶ä½¿ç”¨*/
 	CSerialize(const int TotalBufLen = SERIALIZE_BUF_SIZE);
-	/*·´ĞòÁĞ»¯Ê±Ê¹ÓÃ*/
+	/*ååºåˆ—åŒ–æ—¶ä½¿ç”¨*/
 	CSerialize(const char* szBuf,const int szBufLen);
 	~CSerialize(void);
 public:
@@ -45,42 +44,42 @@ public:
 	CSerialize&  operator<<(const T_SZBUF& _Val); 
 	CSerialize&  operator>>(T_SZBUF& _Val);
 public:
-	/*»ñÈ¡ÒÑĞòÁĞ»¯µÄbuf´óĞ¡*/
+	/*è·å–å·²åºåˆ—åŒ–çš„bufå¤§å°*/
 	inline int GetIndex(){return m_iCurrIndex+1;}
 	
-	/*·µ»ØĞòÁĞ»¯ºóµÄbuf*/
+	/*è¿”å›åºåˆ—åŒ–åçš„buf*/
 	inline const char* Serialize(){return m_strBuf;}
 	
-	/*ÖØÖÃÏÂ±êÎª³õÊ¼Î»ÖÃ*/
+	/*é‡ç½®ä¸‹æ ‡ä¸ºåˆå§‹ä½ç½®*/
 	inline void ResetIndex(){m_iCurrIndex = 0;}
 
-	/*½«bufÇå¿Õ£¬²¢ÖØÖÃÏÂ±ê*/
+	/*å°†bufæ¸…ç©ºï¼Œå¹¶é‡ç½®ä¸‹æ ‡*/
 	bool ClearBuffer();
 
-	/*»ñÈ¡ĞòÁĞ»¯¶ÔÏó×´Ì¬*/
+	/*è·å–åºåˆ—åŒ–å¯¹è±¡çŠ¶æ€*/
 	inline bool GetSerStatus(){return m_SerStatus;}
 
-	/*ÊÍ·ÅÄÚ²¿¿Õ¼ä*/
+	/*é‡Šæ”¾å†…éƒ¨ç©ºé—´*/
 	void Release();
 private:
-	/*ĞòÁĞ»¯Ê±ÄÚ²¿¿Õ¼ä³õÊ¼»¯*/
+	/*åºåˆ—åŒ–æ—¶å†…éƒ¨ç©ºé—´åˆå§‹åŒ–*/
 	bool BufInit();
 	
-	/*buf³¤¶È¼ì²é*/
+	/*bufé•¿åº¦æ£€æŸ¥*/
 	bool CheckLength(const int ValueLen,LENGTH_CHECK_TYPE checkType);
 	
-	/*ĞòÁĞ»¯Ò»¸ö¶ÔÏó*/
+	/*åºåˆ—åŒ–ä¸€ä¸ªå¯¹è±¡*/
 	void ValueWrite(const char* strValue,const int valueLen);
 	
-	/*·´ĞòÁĞ»¯Ò»¸ö¶ÔÏó*/
+	/*ååºåˆ—åŒ–ä¸€ä¸ªå¯¹è±¡*/
 	void ValueRead(void* ValueAddress,const int valueLen);
 private:
-	int   m_iTotalLen;				//buf×Ü³¤
-	int   m_iCurrIndex;				//µ±Ç°ÏÂ±ê
-	char* m_strBuf;					//bufµØÖ·
-	bool  m_isSerialize;			//true->ĞòÁĞ»¯,false->·´ĞòÁĞ»¯
-	bool  m_SerStatus;				//ĞòÁĞ»¯×´Ì¬£¬trueÎªÕı³££¬falseÎªÒì³£
-	unsigned short m_iReallocCount;	//¿Õ¼äÀ©Õ¹´ÎÊı
+	int   m_iTotalLen;				//bufæ€»é•¿
+	int   m_iCurrIndex;				//å½“å‰ä¸‹æ ‡
+	char* m_strBuf;					//bufåœ°å€
+	bool  m_isSerialize;			//true->åºåˆ—åŒ–,false->ååºåˆ—åŒ–
+	bool  m_SerStatus;				//åºåˆ—åŒ–çŠ¶æ€ï¼Œtrueä¸ºæ­£å¸¸ï¼Œfalseä¸ºå¼‚å¸¸
+	unsigned short m_iReallocCount;	//ç©ºé—´æ‰©å±•æ¬¡æ•°
 private:
 	CSerialize(CSerialize& sz){}
 	CSerialize& operator=(CSerialize &sz){return *this;}
