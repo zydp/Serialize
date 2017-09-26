@@ -1,6 +1,6 @@
 # Serialize
 
-#using it like this
+# using it like this
 
 	bool b = true;
 	int i32 = 2;
