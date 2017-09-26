@@ -12,7 +12,7 @@
 
 	std::cout << sz.GetSerStatus() << sz.GetIndex() << sz.Serialize() << std::endl;
 
-//---------------------------------------------
+# ---------------------------------------------
 	CSerialize rsz(sz.Serialize(), sz.GetIndex());
 	bool b_2;
 	int i32_2;
