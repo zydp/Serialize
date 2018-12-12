@@ -79,13 +79,16 @@ bool CSerialize::CheckLength(const int ValueLen,LENGTH_CHECK_TYPE checkType)
 			m_SerStatus = false;
 			return false;
 		}
-		if(m_iReallocCount>=SERIALIZE_REALLOC_MAX_COUNT)
+		unsigned short radix = 1 + (ValueLen / SERIALIZE_BUF_SIZE);
+
+		if ((m_iReallocCount >= SERIALIZE_REALLOC_MAX_COUNT) || ((radix + m_iReallocCount) > SERIALIZE_REALLOC_MAX_COUNT))
 		{
 			m_SerStatus = false;
 			return false;
 		}
-		++m_iReallocCount;
-		char* newSizeBuf = (char*)realloc(m_strBuf,m_iTotalLen+SERIALIZE_BUF_SIZE);
+
+		m_iReallocCount += radix;
+		char* newSizeBuf = (char*)realloc(m_strBuf, m_iTotalLen + radix * SERIALIZE_BUF_SIZE);
 		if(NULL==newSizeBuf)
 		{
 			m_SerStatus = false;
@@ -110,7 +113,7 @@ void CSerialize::ValueRead(void* ValueAddress,const int valueLen)
 	m_iCurrIndex+=valueLen;
 }
 
-/*将buf清空，并重置下标*/
+/*陆芦buf脟氓驴脮拢卢虏垄脰脴脰脙脧脗卤锚*/
 bool CSerialize::ClearBuffer()
 {
 	if(NULL==m_strBuf || !m_iCurrIndex || !m_iTotalLen)
